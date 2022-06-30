@@ -1,0 +1,60 @@
+004-005 @READ_PROGRAM_MEMORY8.P1
+004     @WRITE_PROGRAM_MEMORY8.P2
+008     PSP_DATA
+015     CCP_1_LOW
+015     CCP_1
+016     CCP_1_HIGH
+01B     CCP_2_LOW
+01B     CCP_2
+01C     CCP_2_HIGH
+020     i
+021     @delay_ms1.P1
+021     main.@SCRATCH1
+077     @SCRATCH
+078     @SCRATCH
+078     _RETURN_
+079     @SCRATCH
+07A     @SCRATCH
+09C.6   C1OUT
+09C.7   C2OUT
+10D-10E @READ_PROGRAM_MEMORY8.P1
+10D-10E @WRITE_PROGRAM_MEMORY8.P2
+
+ROM Allocation:
+0004  @delay_ms1
+0019  main
+0019  @cinit
+
+
+User Memory space: 
+
+User Memory space: 
+
+Project Directory:
+    C:\Users\yosaf\Desktop\Sexto\Instrumentacion\Segundo Parcial\Codigo\leds_corrimiento\
+
+Project Files:
+    corrimiento.c
+    ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\devices\16f877a.h
+
+Units:
+    C:\Users\yosaf\Desktop\Sexto\Instrumentacion\Segundo Parcial\Codigo\leds_corrimiento\corrimiento (main)
+
+Compiler Settings:
+    Processor:      PIC16F877A
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+
+Output Files:
+    Errors:      corrimiento.err
+    Ext Symbols: corrimiento.esym
+    INHX8:       corrimiento.hex
+    Symbols:     corrimiento.sym
+    List:        corrimiento.lst
+    Debug/COFF:  corrimiento.cof
+    Project:     corrimiento.PJT
+    Call Tree:   corrimiento.tre
+    Statistics:  corrimiento.sta

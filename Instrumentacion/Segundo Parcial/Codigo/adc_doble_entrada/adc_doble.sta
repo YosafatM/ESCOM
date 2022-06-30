@@ -1,0 +1,61 @@
+
+ROM used: 992 (12%)
+          992 (12%) including unused fragments
+
+          1 Average locations per line
+          7 Average locations per statement
+
+RAM used: 20 (5%) at main() level
+          45 (12%) worst case
+
+Stack used: 2 worst case (out of 8 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   35    17  12  adc_doble.c
+  326     0   0  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\devices\16f877a.h
+   37     0   0  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\drivers\stdio.h
+  409   121  88  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\drivers\string.h
+   28     0   0  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\drivers\stddef.h
+   28     0   0  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\drivers\ctype.h
+----- -----
+  863   138 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     21   2   1             @delay_ms1
+0    264  27  13   518  3.2  MAIN
+0     29   3   2             @ITOF
+0    117  12  13             @MULFF
+0     15   2   0             @const172
+0     80   8   4             @PSTRINGCN7_9600_62_63
+0    118  12   9             @PRINTF_LD_9600_62_63
+0     14   1   0             @const177
+ Inline        5             @FTOSD
+0     66   7  13             @DIV3232
+0    235  24  13             @PRINTF_L32D_9600_62_63FPFPF
+0     15   2   0             @const186
+0     14   1   0             @const187
+
+Program metrics:
+    Functions               1
+    Statements              138
+    Comments                257
+    Volume (V)              544
+    Difficilty (D)          2.6
+    Effort to implement (E) 1388
+    Time to implement (T)   1 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   1
+    Maintainability (MI)    44
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-007FF   988  1056  
+00800-00FFF     0  2048  
+01000-017FF     0  2048  
+01800-01FFF     0  2048  
+
+
+

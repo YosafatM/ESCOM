@@ -1,0 +1,28 @@
+ÀÄadc_doble
+   ÀÄMAIN  0/264  Ram=13
+      ÃÄ??0??
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄ@ITOF  0/29  Ram=2
+      ÃÄ@MULFF  0/117  Ram=13
+      ÃÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4
+      ÃÄ@PRINTF_LD_9600_62_63  0/118  Ram=9
+      ÃÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4
+      ÃÄ@PRINTF_L32D_9600_62_63FPFPF  0/235  Ram=13
+      ³  ÃÄ@MULFF  0/117  Ram=13
+      ³  ÃÄ@FTOSD  (Inline)  Ram=5
+      ³  ÃÄ@DIV3232  0/66  Ram=13
+      ³  ÀÄ@DIV3232  0/66  Ram=13
+      ÃÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄ@ITOF  0/29  Ram=2
+      ÃÄ@MULFF  0/117  Ram=13
+      ÃÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4
+      ÃÄ@PRINTF_LD_9600_62_63  0/118  Ram=9
+      ÃÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4
+      ÃÄ@PRINTF_L32D_9600_62_63FPFPF  0/235  Ram=13
+      ³  ÃÄ@MULFF  0/117  Ram=13
+      ³  ÃÄ@FTOSD  (Inline)  Ram=5
+      ³  ÃÄ@DIV3232  0/66  Ram=13
+      ³  ÀÄ@DIV3232  0/66  Ram=13
+      ÀÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4

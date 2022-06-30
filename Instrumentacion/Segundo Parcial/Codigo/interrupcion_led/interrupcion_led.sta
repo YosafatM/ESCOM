@@ -1,0 +1,47 @@
+
+ROM used: 83 (1%)
+          83 (1%) including unused fragments
+
+          0 Average locations per line
+          9 Average locations per statement
+
+RAM used: 12 (3%) at main() level
+          12 (3%) worst case
+
+Stack used: 1 worst case (out of 8 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   20     9 100  interrupcion_led.c
+  326     0   0  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\devices\16f877a.h
+----- -----
+  346     9 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0      9  11   0    17  0.8  int_RB0
+0     27  33   0   127  1.7  MAIN
+
+Program metrics:
+    Functions               2
+    Statements              9
+    Comments                75
+    Volume (V)              169
+    Difficilty (D)          2.8
+    Effort to implement (E) 468
+    Time to implement (T)   0 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   1
+    Maintainability (MI)    120
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-0002E    43  0  
+0002F-007FF    36  1965  
+00800-00FFF     0  2048  
+01000-017FF     0  2048  
+01800-01FFF     0  2048  
+
+
+

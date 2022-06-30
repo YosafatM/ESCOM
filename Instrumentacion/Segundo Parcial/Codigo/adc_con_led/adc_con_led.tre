@@ -1,0 +1,16 @@
+ÀÄadc_con_led
+   ÀÄMAIN  0/171  Ram=7
+      ÃÄ??0??
+      ÃÄ@delay_ms1  0/23  Ram=1
+      ÃÄ@ITOF  0/31  Ram=2
+      ÃÄ@MULFF  0/117  Ram=13
+      ÃÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4
+      ÃÄ@PRINTF_LD_9600_62_63  0/120  Ram=9
+      ÃÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4
+      ÃÄ@PRINTF_L32D_9600_62_63FPFPF  0/237  Ram=13
+      ³  ÃÄ@MULFF  0/117  Ram=13
+      ³  ÃÄ@FTOSD  (Inline)  Ram=5
+      ³  ÃÄ@DIV3232  0/66  Ram=13
+      ³  ÀÄ@DIV3232  0/66  Ram=13
+      ÃÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4
+      ÀÄ@FLT  0/65  Ram=10

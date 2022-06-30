@@ -1,0 +1,128 @@
+CCS PCM C Compiler, Version 4.104, 5967               14-may.-21 20:54
+
+               Filename: C:\Users\yosaf\Desktop\Sexto\Instrumentacion\Segundo Parcial\Codigo\leds_corrimiento\corrimiento.lst
+
+               ROM used: 91 words (1%)
+                         Largest free fragment is 2048
+               RAM used: 7 (2%) at main() level
+                         7 (2%) worst case
+               Stack:    1 locations
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   019
+0003:  NOP
+.................... #INCLUDE <16f877a.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+.................... #list 
+....................  
+.................... #USE DELAY (CLOCK = 4M) 
+0004:  MOVLW  21
+0005:  MOVWF  04
+0006:  BCF    03.7
+0007:  MOVF   00,W
+0008:  BTFSC  03.2
+0009:  GOTO   018
+000A:  MOVLW  01
+000B:  MOVWF  78
+000C:  CLRF   77
+000D:  DECFSZ 77,F
+000E:  GOTO   00D
+000F:  DECFSZ 78,F
+0010:  GOTO   00C
+0011:  MOVLW  4A
+0012:  MOVWF  77
+0013:  DECFSZ 77,F
+0014:  GOTO   013
+0015:  GOTO   016
+0016:  DECFSZ 00,F
+0017:  GOTO   00A
+0018:  RETURN
+.................... #FUSES XT, NOWDT 
+....................  
+.................... int8 i; 
+.................... void main(){ 
+0019:  CLRF   04
+001A:  BCF    03.7
+001B:  MOVLW  1F
+001C:  ANDWF  03,F
+001D:  BSF    03.5
+001E:  BSF    1F.0
+001F:  BSF    1F.1
+0020:  BSF    1F.2
+0021:  BCF    1F.3
+0022:  MOVLW  07
+0023:  MOVWF  1C
+....................    Set_Tris_B(0x00); 
+0024:  MOVLW  00
+0025:  MOVWF  06
+....................     
+....................    while (true){ 
+....................       for (i = 0; i < 9; i++) { 
+0026:  BCF    03.5
+0027:  CLRF   20
+0028:  MOVF   20,W
+0029:  SUBLW  08
+002A:  BTFSS  03.0
+002B:  GOTO   040
+....................          output_b(0x01<<i); 
+002C:  MOVLW  01
+002D:  MOVWF  21
+002E:  MOVF   20,W
+002F:  MOVWF  78
+0030:  BTFSC  03.2
+0031:  GOTO   036
+0032:  BCF    03.0
+0033:  RLF    21,F
+0034:  DECFSZ 78,F
+0035:  GOTO   032
+0036:  BSF    03.5
+0037:  CLRF   06
+0038:  BCF    03.5
+0039:  MOVF   21,W
+003A:  MOVWF  06
+....................          delay_ms(50); 
+003B:  MOVLW  32
+003C:  MOVWF  21
+003D:  CALL   004
+....................       } 
+003E:  INCF   20,F
+003F:  GOTO   028
+....................       for (i = 0; i < 9; i++) { 
+0040:  CLRF   20
+0041:  MOVF   20,W
+0042:  SUBLW  08
+0043:  BTFSS  03.0
+0044:  GOTO   059
+....................          output_b(0x80>>i); 
+0045:  MOVLW  80
+0046:  MOVWF  21
+0047:  MOVF   20,W
+0048:  MOVWF  78
+0049:  BTFSC  03.2
+004A:  GOTO   04F
+004B:  BCF    03.0
+004C:  RRF    21,F
+004D:  DECFSZ 78,F
+004E:  GOTO   04B
+004F:  BSF    03.5
+0050:  CLRF   06
+0051:  BCF    03.5
+0052:  MOVF   21,W
+0053:  MOVWF  06
+....................          delay_ms(50); 
+0054:  MOVLW  32
+0055:  MOVWF  21
+0056:  CALL   004
+....................       } 
+0057:  INCF   20,F
+0058:  GOTO   041
+....................    } 
+0059:  GOTO   027
+.................... } 
+005A:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F71   XT NOWDT PUT NODEBUG NOPROTECT BROWNOUT NOLVP NOCPD NOWRT

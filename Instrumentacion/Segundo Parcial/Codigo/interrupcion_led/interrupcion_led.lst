@@ -1,0 +1,120 @@
+CCS PCM C Compiler, Version 4.104, 5967               18-may.-21 14:09
+
+               Filename: C:\Users\yosaf\Desktop\Sexto\Instrumentacion\Segundo Parcial\Codigo\interrupcion_led\interrupcion_led.lst
+
+               ROM used: 83 words (1%)
+                         Largest free fragment is 2048
+               RAM used: 12 (3%) at main() level
+                         12 (3%) worst case
+               Stack:    1 worst case (0 in main + 1 for interrupts)
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   038
+0003:  NOP
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  CLRF   03
+0007:  MOVWF  21
+0008:  MOVF   0A,W
+0009:  MOVWF  20
+000A:  CLRF   0A
+000B:  MOVF   04,W
+000C:  MOVWF  22
+000D:  MOVF   77,W
+000E:  MOVWF  23
+000F:  MOVF   78,W
+0010:  MOVWF  24
+0011:  MOVF   79,W
+0012:  MOVWF  25
+0013:  MOVF   7A,W
+0014:  MOVWF  26
+0015:  BCF    03.7
+0016:  BCF    03.5
+0017:  BTFSS  0B.4
+0018:  GOTO   01B
+0019:  BTFSC  0B.1
+001A:  GOTO   02C
+001B:  MOVF   22,W
+001C:  MOVWF  04
+001D:  MOVF   23,W
+001E:  MOVWF  77
+001F:  MOVF   24,W
+0020:  MOVWF  78
+0021:  MOVF   25,W
+0022:  MOVWF  79
+0023:  MOVF   26,W
+0024:  MOVWF  7A
+0025:  MOVF   20,W
+0026:  MOVWF  0A
+0027:  SWAPF  21,W
+0028:  MOVWF  03
+0029:  SWAPF  7F,F
+002A:  SWAPF  7F,W
+002B:  RETFIE
+002C:  BCF    0A.3
+002D:  BCF    0A.4
+002E:  GOTO   02F
+.................... #include <16f877a.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+.................... #list 
+....................  
+.................... #fuses XT, NOWDT 
+.................... #use delay (clock=4MHz) 
+....................  
+.................... #int_ext 
+.................... void int_RB0() { 
+....................    output_toggle(pin_B7); 
+002F:  BSF    03.5
+0030:  BCF    06.7
+0031:  MOVLW  80
+0032:  BCF    03.5
+0033:  XORWF  06,F
+.................... } 
+....................  
+0034:  BCF    0B.1
+0035:  BCF    0A.3
+0036:  BCF    0A.4
+0037:  GOTO   01B
+.................... void main() { 
+0038:  CLRF   04
+0039:  BCF    03.7
+003A:  MOVLW  1F
+003B:  ANDWF  03,F
+003C:  BSF    03.5
+003D:  BSF    1F.0
+003E:  BSF    1F.1
+003F:  BSF    1F.2
+0040:  BCF    1F.3
+0041:  MOVLW  07
+0042:  MOVWF  1C
+....................    set_tris_B(0x01); 
+0043:  MOVLW  01
+0044:  MOVWF  06
+....................    output_low(pin_B7); 
+0045:  BCF    06.7
+0046:  BCF    03.5
+0047:  BCF    06.7
+....................    port_B_pullups(true); 
+0048:  BSF    03.5
+0049:  BCF    01.7
+....................    enable_interrupts(int_ext); 
+004A:  BCF    03.5
+004B:  BSF    0B.4
+....................    ext_int_edge(H_to_L); 
+004C:  BSF    03.5
+004D:  BCF    01.6
+....................    enable_interrupts(global); 
+004E:  MOVLW  C0
+004F:  BCF    03.5
+0050:  IORWF  0B,F
+....................     
+....................    while (true){} 
+0051:  GOTO   051
+.................... } 
+0052:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F71   XT NOWDT PUT NODEBUG NOPROTECT BROWNOUT NOLVP NOCPD NOWRT

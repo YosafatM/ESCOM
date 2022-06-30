@@ -1,0 +1,53 @@
+
+ROM used: 296 (4%)
+          296 (4%) including unused fragments
+
+          0 Average locations per line
+          2 Average locations per statement
+
+RAM used: 20 (5%) at main() level
+          27 (7%) worst case
+
+Stack used: 2 worst case (out of 8 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   30    14  10  timer_1.c
+  326     0   0  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\devices\16f877a.h
+   37     0   0  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\drivers\stdio.h
+  409   121  90  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\drivers\string.h
+   28     0   0  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\drivers\stddef.h
+   28     0   0  ..\..\..\..\..\..\..\..\Program Files (x86)\PICC\drivers\ctype.h
+----- -----
+  858   135 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0      6   2   0    17  0.8  timer_1
+0    111  38   2   355  5.9  MAIN
+0     39  13   5             @DIV1616
+0     91  31   9             @PRINTF_LU_9600_62_63
+
+Program metrics:
+    Functions               2
+    Statements              135
+    Comments                257
+    Volume (V)              407
+    Difficilty (D)          6.5
+    Effort to implement (E) 2638
+    Time to implement (T)   2 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   1
+    Maintainability (MI)    27
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-00030    45  0  
+00031-007FF   247  1752  
+00800-00FFF     0  2048  
+01000-017FF     0  2048  
+01800-01FFF     0  2048  
+
+
+

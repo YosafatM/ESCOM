@@ -1,0 +1,161 @@
+CCS PCM C Compiler, Version 4.104, 5967               27-may.-21 21:22
+
+               Filename: C:\Users\yosaf\Desktop\Sexto\Instrumentacion\Segundo Parcial\Codigo\timer_2\timer_2.lst
+
+               ROM used: 117 words (1%)
+                         Largest free fragment is 2048
+               RAM used: 10 (3%) at main() level
+                         11 (3%) worst case
+               Stack:    1 locations
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   01B
+0003:  NOP
+.................... #include <16f877a.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+.................... #list 
+....................  
+.................... #fuses xt, nowdt, noprotect, nolvp, put, brownout 
+.................... #use delay (clock=4000000) 
+*
+0004:  MOVLW  25
+0005:  MOVWF  04
+0006:  BCF    03.7
+0007:  MOVF   00,W
+0008:  BTFSC  03.2
+0009:  GOTO   018
+000A:  MOVLW  01
+000B:  MOVWF  78
+000C:  CLRF   77
+000D:  DECFSZ 77,F
+000E:  GOTO   00D
+000F:  DECFSZ 78,F
+0010:  GOTO   00C
+0011:  MOVLW  4A
+0012:  MOVWF  77
+0013:  DECFSZ 77,F
+0014:  GOTO   013
+0015:  GOTO   016
+0016:  DECFSZ 00,F
+0017:  GOTO   00A
+0018:  BCF    0A.3
+0019:  BCF    0A.4
+001A:  GOTO   066 (RETURN)
+....................  
+.................... int16 duty; 
+.................... int Timer2, Poscaler; 
+....................  
+.................... void main() { 
+001B:  CLRF   04
+001C:  BCF    03.7
+001D:  MOVLW  1F
+001E:  ANDWF  03,F
+001F:  BSF    03.5
+0020:  BSF    1F.0
+0021:  BSF    1F.1
+0022:  BSF    1F.2
+0023:  BCF    1F.3
+0024:  MOVLW  07
+0025:  MOVWF  1C
+....................    Timer2 = 249; 
+*
+0029:  MOVLW  F9
+002A:  MOVWF  22
+....................    Poscaler = 1; 
+002B:  MOVLW  01
+002C:  MOVWF  23
+....................    set_tris_c(0b11111110); 
+002D:  MOVLW  FE
+002E:  BSF    03.5
+002F:  MOVWF  07
+0030:  BCF    03.5
+0031:  MOVWF  24
+....................    setup_timer_2(t2_div_by_4, Timer2, Poscaler); 
+0032:  MOVLW  01
+0033:  SUBWF  23,W
+0034:  MOVWF  78
+0035:  RLF    78,W
+0036:  MOVWF  77
+0037:  RLF    77,F
+0038:  RLF    77,F
+0039:  MOVLW  F8
+003A:  ANDWF  77,F
+003B:  MOVF   77,W
+003C:  IORLW  05
+003D:  MOVWF  12
+003E:  MOVF   22,W
+003F:  BSF    03.5
+0040:  MOVWF  12
+....................    setup_ccp1(ccp_pwm); 
+0041:  BCF    03.5
+0042:  BCF    24.2
+0043:  MOVF   24,W
+0044:  BSF    03.5
+0045:  MOVWF  07
+0046:  BCF    03.5
+0047:  BCF    07.2
+0048:  MOVLW  0C
+0049:  MOVWF  17
+....................     
+....................    duty = 0; 
+004A:  CLRF   21
+004B:  CLRF   20
+....................     
+....................    while (true) { 
+....................       set_pwm1_duty(duty); 
+004C:  MOVF   21,W
+004D:  MOVWF  79
+004E:  MOVF   20,W
+004F:  MOVWF  78
+0050:  RRF    79,F
+0051:  RRF    78,F
+0052:  RRF    79,F
+0053:  RRF    78,F
+0054:  RRF    79,F
+0055:  MOVF   78,W
+0056:  MOVWF  15
+0057:  RRF    79,F
+0058:  RRF    79,W
+0059:  ANDLW  30
+005A:  MOVWF  77
+005B:  MOVF   17,W
+005C:  ANDLW  CF
+005D:  IORWF  77,W
+005E:  MOVWF  17
+....................       duty = duty + 50; 
+005F:  MOVLW  32
+0060:  ADDWF  20,F
+0061:  BTFSC  03.0
+0062:  INCF   21,F
+....................       delay_ms(200); 
+0063:  MOVLW  C8
+0064:  MOVWF  25
+0065:  GOTO   004
+....................        
+....................       if (duty >= 1023) { 
+0066:  MOVF   21,W
+0067:  SUBLW  02
+0068:  BTFSC  03.0
+0069:  GOTO   073
+006A:  XORLW  FF
+006B:  BTFSS  03.2
+006C:  GOTO   071
+006D:  MOVF   20,W
+006E:  SUBLW  FE
+006F:  BTFSC  03.0
+0070:  GOTO   073
+....................          duty = 0; 
+0071:  CLRF   21
+0072:  CLRF   20
+....................       } 
+....................    } 
+0073:  GOTO   04C
+.................... } 
+....................  
+0074:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F71   XT NOWDT PUT NODEBUG NOPROTECT BROWNOUT NOLVP NOCPD NOWRT

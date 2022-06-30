@@ -1,0 +1,23 @@
+ÀÄinterrupcion_adc_doble
+   ÃÄMAIN  0/36  Ram=0
+   ³  ÃÄ??0??
+   ³  ÀÄ@PSTRINGC_9600_62_63  0/40  Ram=2
+   ÀÄrds_isr  0/214  Ram=0
+      ÃÄleersensor1  (Inline)  Ram=0
+      ³  ÃÄ@ITOF  0/29  Ram=2
+      ³  ÃÄ@MULFF  0/117  Ram=13
+      ³  ÃÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4
+      ³  ÀÄ@PRINTF_L32D_9600_62_63FPFPF  0/235  Ram=13
+      ³     ÃÄ@MULFF  0/117  Ram=13
+      ³     ÃÄ@FTOSD  (Inline)  Ram=5
+      ³     ÃÄ@DIV3232  0/66  Ram=13
+      ³     ÀÄ@DIV3232  0/66  Ram=13
+      ÀÄleersensor2  (Inline)  Ram=0
+         ÃÄ@ITOF  0/29  Ram=2
+         ÃÄ@MULFF  0/117  Ram=13
+         ÃÄ@PSTRINGCN7_9600_62_63  0/80  Ram=4
+         ÀÄ@PRINTF_L32D_9600_62_63FPFPF  0/235  Ram=13
+            ÃÄ@MULFF  0/117  Ram=13
+            ÃÄ@FTOSD  (Inline)  Ram=5
+            ÃÄ@DIV3232  0/66  Ram=13
+            ÀÄ@DIV3232  0/66  Ram=13
