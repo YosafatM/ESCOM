@@ -1,0 +1,173 @@
+HOC6 provee llamadas a procedimiento y llamadas a funcion.
+Repasar el codigo de hoc6
+    -Estudiar resumen del capitulo 7 del libro del dragon
+    Bases para entender hoc6 se deben entender los conceptos
+       de flujo de control (ejec. secuencial y saltos)
+       de decisiones (como se usan para hacer programas)
+       de ciclos (como se usan para hacer programas)
+       Interprete
+       postfijo (para la evaluacion de expresiones)
+       Maquina Virtual (en particular Maquina Virtual de pila)
+       el concepto de Procedimiento
+       Marco de funcion (parametros, dirección de retorno, vars. locales)
+       Mecanismo de llamada a funcion (Secuencia de llamada)
+          Activación del procedimiento
+             Dirección de retorno
+          secuencia de llamada
+             mete el marco de funcion en la pila de llamadas
+             Salta a la primera instruccion del procedimiento llamado
+          secuencia de retorno
+             saca el marco de funcion de la pila de llamadas
+             Salta a la dirección de retorno
+       Recursividad
+    de Compiladores
+       GLC
+       Esquema de traduccion
+    de lenguaje C
+       macros, macros con parametros
+       coercion (casting)
+       arreglos, apuntadores, relacion entre arreglos y apuntadores,
+       valor que proporciona el nombre de un arreglo
+       aritmetica de apuntadores
+       apuntador a apuntador
+       apuntadores a funcion, arreglos de apuntadores a funcion
+       valor que proporciona el nombre de una funcion
+       estructuras y uniones, arreglos de estructuras y uniones
+       asignacion dinamica de memoria
+       recursividad en el codigo y los datos
+       Declaración de funcion (en lenguajeC prototipo)
+          TipoRetorno nombreFuncion(listaParamFormales);
+       Definición de funcion
+          parametros formales
+          variables locales
+              en lenguajeC las variables locales (no estaticas) se crean
+              cuando se ejecuta la funcion y se destruyen cuando se termina
+              la ejecucion de la funcion
+       Definición de funcion en lenguajeC
+          TipoRetorno nombreFuncion(listaParamFormales){//inic. cuerpo
+              [variables locales]
+              [return [expr]];
+          }//inic cuerpo
+       listaParamFormales
+          Tipo1 nombParam1, Tipo2 nombParam2, ..., TipoN nombParamN
+       Llamada a funcion
+          parametros reales
+       Llamada a funcion en lenguajeC
+          nombreFuncion(listaParamReales);
+       listaParamReales
+          expr1, expr2, expr3, ..., exprN,
+    Estructura de Datos   
+       Pila (LIFO)
+       evaluacion de expresiones en postfijo usando una pila
+       listas simplemente enlazadas
+       busqueda e insercion en listas simplemente enlazadas
+       
+    de YACC
+       accion gramatical
+       $$, $n (en particular $1,$2,$3,$4,$5,$6,$7, etc.)
+
+              exp1
+              exp2
+              exp3
+              ...
+              expN
+              call
+         pc-> *sym                en accion gram $1
+              nargs               en accion gram $4
+
+    Mapa de memoria de una llamada a procedimiento
+
+    3 pilas en hoc6
+       pila de yacc
+       pila de la maquina virtual (funciones push() y pop())
+
+                  <-stackp
+             argN
+             ...
+             arg3
+             arg2
+             arg1
+
+       pila de llamadas a funcion ( fp++ (push) y --fp (pop) )
+
+             argn
+             nargs
+             retpc
+             sp
+
+    2 tipos de codigo ejecutable
+             expresiones
+             enunciados (statements)
+    -en la gramatica ver la parte de stmt de las producciones de
+     llamada a procedimiento.
+    -en la gramatica ver la parte de expr de las producciones de
+     llamada a funcion.
+    -en la gramatica ver las producciones de definición de un procedimiento.
+    -en la gramatica ver las producciones de definición de una funcion.
+    -Saber para que sirve cada una de lasvariables usadas en hoc6
+     para el Mecanismo de llamada a funcion
+       fp, stackp
+       progp, pc
+      
+    -estudiar las funciones define, call, ret y getarg
+
+   void define(Symbol *sp){
+     sp->u.defn = (Inst)progbase;    /* lnlolo de código */
+     progbase = progp;      /* el siguiente código comienza aquí */
+   }
+   void call() {
+   Symbol *sp = (Symbol *)pc[0];/*entrada en tabla da simbolos  */
+                                    /*para info de la función   */
+   if   (fp++   >=  &frame[NFRAME-1]) //fp++ es el push
+     execerror(sp->name,   "call  nested too deeply");
+   fp->sp = sp;
+   fp->nargs =   (int)pc[1]; /* num. de argumentos */
+   fp->retpc = pc  + 2; //dir. de retorno
+   fp->argn  =  stackp  -   1;  /*apun al último argumento   */
+   execute(sp->u.defn);//ejec. cuerpo func. inic. en la 1a. intruccion
+   returning = 0;
+   }
+   void ret( ) {
+      int i;
+      for (i = 0; i < fp->nargs; i++)
+         pop();  /* sacar argunentos de la pila */
+      pc = (Inst *)fp->retpc;// para saltar a la dir. de retorno
+      --fp;// pop (saca de la pila de llamadas)
+      returning = 1;
+   }
+   double *getarg( ) {
+     int nargs = (int) *pc++;
+     if (nargs > fp->nargs)
+    execerror(fp-> sp->name, "not enough arguments");
+     return &fp->argn[nargs - fp->nargs].val;
+   }
+ 
+PARA EVITAR ERRORES EN LA PRACTICA 6 VERIFICAR
+
+ver que en las producciones se asigna un valor a $$ como se hace en
+las producciones de hoc6 por ejemplo
+
+expr: NUMBER {   $$ = code2(constpush, (Inst)$1); }//bien hoc6
+
+     bien porque se asigna un valor valido a $$ ( no nulo ni al azar)
+
+expr: NUMBER {   code2(constpush, (Inst)$1); }//error
+
+     si no se asigna un valor valido a $$ entonces tenemos un
+     apuntador "salvaje" y el programa puede fallar    
+
+     donde este el codigo de abajoverificar que este execute(progbase)
+     en vez de execute(prog)
+
+     for   (initcode();   yyparse();   initcode()){
+        //puts("ant execute");
+    execute(progbase);//en hoc6 debe ser progbase no prog
+     }
+    
+    
+    
+
+
+
+, o
+

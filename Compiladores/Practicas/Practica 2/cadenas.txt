@@ -1,0 +1,18 @@
+//Coche
+rectangulo 50 50 100 20 ;
+rectangulo 60 30 70 20 ;
+circulo 10 60 70 ;
+circulo 10 120 70 ;
+
+//Casa
+rectangulo 50 200 100 90 ;
+rectangulo 110 250 30 40 ;
+line 50 200 100 150 ;
+line 100 150 150 200 ;
+
+//Personita
+circulo 50 250 250 ;
+line 275 300 275 400 ;
+line 250 330 300  330 ;
+line 245 430 275 400 ;
+line 275 400 305 430 ;

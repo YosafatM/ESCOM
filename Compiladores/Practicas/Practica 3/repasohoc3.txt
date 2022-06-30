@@ -1,0 +1,26 @@
+Repasar el codigo de hoc3
+
+Bases para entender hoc3 que conceptos se deben entender
+    Programa = datos + codigo
+    Interprete
+de Compiladores
+       GLC
+       Esquema de traduccion
+de lenguaje C
+       macros
+       coercion (casting)
+       arreglos, apuntadores, relacion entre arreglos y apuntadores,
+       valor que proporciona el nombre de un arreglo
+       aritmetica de apuntadores
+       apuntadores a funcion, arreglos de apuntadores a funcion
+       valor que proporciona el nombre de una funcion
+       estructuras y uniones, arreglos de estructuras y uniones
+       asignacion dinamica de memoria
+       recursividad en los datos
+Estructura de Datos
+       listas simplemente enlazadas
+       busqueda e insercion en listas simplemente enlazadas
+de YACC
+       accion gramatical
+       $$, $n (en particular $1,$2,$3,$4,$5,$6,$7, etc.)
+

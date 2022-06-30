@@ -1,0 +1,183 @@
+
+
+Repasar el codigo de hoc4
+
+Bases para entender hoc4 que conceptos se deben entender
+    de Hardware
+       RAM
+       CPU
+          ALU , Unidad de Control, Registros
+
+          Registros (son memoria)
+             pc contador de programa
+             sp stack pointer (stackp en HOC)
+
+          Conjunto de instrucciones
+             en HOC4 son funciones que no reciben parametros y cuyo tipo de 
+             retorno es void
+
+    Programa = datos + codigo
+    Interprete
+    Maquina Virtual
+    de Compiladores
+       GLC
+       Esquema de traduccion
+    de lenguaje C
+       macros, macros con parametros
+       coercion (casting)
+       arreglos, apuntadores, relacion entre arreglos y apuntadores,
+       valor que proporciona el nombre de un arreglo
+       aritmetica de apuntadores
+       apuntador a apuntador
+       apuntadores a funcion, arreglos de apuntadores a funcion
+       valor que proporciona el nombre de una funcion
+       estructuras y uniones, arreglos de estructuras y uniones
+       asignacion dinamica de memoria
+       recursividad en el codigo y los datos
+    Estructura de Datos   
+       Pila (LIFO)
+       evaluacion de expresiones en postfijo usando una pila
+       listas simplemente enlazadas
+       busqueda e insercion en listas simplemente enlazadas    
+    de YACC
+       accion gramatical
+       $$, $n (en particular $1,$2,$3,$4,$5,$6,$7, etc.)
+    de Maquina Virtual de Pila
+        Pila arreglo stack donde los elementos son de tipo Datum
+           Datum es una union (double y apuntador a una entrada en la tabla de simbolos)
+        RAM (ring) arreglo prog donde los elementos son de tipo apuntador a funcion 
+           Inst es un apuntador a funciones que no reciben parametros y cuyo tipo de 
+           retorno es void
+
+Generacion codigo
+
+Pasos para codificar una funcion recursiva
+1.-Definir el problema de forma recursiva
+2.-Detener la Recursividad (uso de caso base)
+3.-llamada(s) recursiva(s)
+4.-Probar la funcion recursiva ( dibujar el arbol de llamadas)
+
+
+
+Paso 1.-Definir el problema de forma recursiva para las Torres de Hanoi
+1.-Mover n-1 discos de A a B             (recursivo)
+2.-Mover el disco mas grande de A a C
+3.-Mover n-1 discos de B a C             (recursivo)
+
+Paso 2.-Detener la Recursividad (uso de caso base) 
+   caso base un solo disco mover el disco de A a C
+
+Backtracking
+
+Generacion codigo HOC4
+       se usa una generalizacion de la notacion postfija 
+       Tipos de Datos : Inst
+       Variables: progp
+       Funciones: yyparse, code
+       Codigo mas importante:
+       oprogp = progp;
+       *progp++ = f;//almacena la instruccion f en la RAM y avanza el apuntador progp
+       return oprogp; //retorna la direccion donde se almaceno f en la RAM
+       
+Ejemplo
+       VAR = expr
+       VAR = expr   * exṕr
+       VAR = NUMBER * VAR
+        x  = 2      * y         ENTER
+
+HOC4
+       Codigo Generado
+
+       RAM
+       constpush
+       2         -> entrada tabla de simbolos
+       varpush
+       y         -> entrada tabla de simbolos
+       eval
+       mul
+       varpush
+       x         -> entrada tabla de simbolos
+       assign
+       pop1
+       STOP
+progp->
+
+Otro ejemplo
+   5 + 9 * 2       ENTER
+
+Codigo Generado
+
+       RAM
+       constpush
+       5         -> entrada tabla de simbolos
+       constpush
+       9         -> entrada tabla de simbolos
+       constpush
+       2         -> entrada tabla de simbolos
+       mul
+       add
+       print
+       STOP
+progp->
+
+Ejecucion codigo
+       Tipos de Datos : Inst y Datum
+       Variables: pc
+       Funcion mas importante: execute
+       Funciones que avanzan pc: constpush, varpush y bltin
+       Codigo mas importante:
+       for  (pc  =  p;   *pc != STOP; ) //se sale del ciclo cuando encuentra un STOP
+	    (*pc++)();//se usa el apuntador a funcion para llamar a la funcion
+
+
+       RAM
+       constpush
+pc->   5         -> entrada tabla de simbolos
+       constpush
+pc->   9         -> entrada tabla de simbolos
+       constpush
+pc->   2         -> entrada tabla de simbolos
+pc->   mul
+pc->   add
+       print
+       STOP
+
+
+Ejecucion
+                                    2
+                       9            9                      18
+push(5)  5   push(9)   5  push(2)   5  push(pop()*pop())    5    push(pop()+pop())  23
+
+Observacion: cuando se realiza una operacion los operandos ya deben estar en la pila
+
+Ejemplo
+builtin
+        Codigo Generado
+        RAM
+        expr
+        bltin
+        apuntador a funcion que recibe un double y cuyo tipo de retorno es double
+
+Ejemplo
+sin(0)
+        Codigo Generado
+        RAM
+        constpush 
+        0
+        bltin
+        sin
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+

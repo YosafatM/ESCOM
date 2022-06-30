@@ -1,0 +1,286 @@
+#Martinez Coronel Brayan Yosafat 
+#Ramirez Olvera Guillermo
+#Sanchez Mendez Edmundo Josue
+#Proyecto: LOGOS
+#18/01/2021
+#3CM7
+//Ejemplo
+PenUP[];
+FORWARD[100];
+TURN[90];
+PenDOWN[];
+COLOR[255,0,0];
+FORWARD[100];
+TURN[90];
+COLOR[0,255,0];
+FORWARD[100];
+TURN[90];
+COLOR[0,0,255];
+FORWARD[100];
+TURN[90];
+
+//Figuras del 3 - 10
+for(i = 0; i < 3; i = i + 1)
+{
+	FORWARD[100];
+	TURN[120];
+}
+for(i = 0; i < 4; i = i + 1)
+{
+	FORWARD[100];
+	TURN[90];
+}
+
+for(i = 0; i < 5; i = i + 1)
+{
+	FORWARD[100];
+	TURN[72];
+}
+for(i = 0; i < 6; i = i + 1)
+{
+	FORWARD[100];
+	TURN[60];
+}
+for(i = 0; i < 7; i = i + 1)
+{
+	FORWARD[100];
+	TURN[52];
+}
+for(i = 0; i < 8; i = i + 1)
+{
+	FORWARD[100];
+	TURN[45];
+}
+for(i = 0; i < 9; i = i + 1)
+{
+	FORWARD[100];
+	TURN[40];
+}
+for(i = 0; i < 10; i = i + 1)
+{
+	FORWARD[100];
+	TURN[36];
+}
+
+//Estrella de David
+func estrellaDavid () {
+   COLOR[235,222,0];
+   for(aux=0; aux<3; aux=aux+1){
+      FORWARD [$1];
+      TURN [120];
+   }
+   TURN[60];
+   FORWARD[$1-50];
+   TURN[120];
+   FORWARD[$1-120];
+   TURN[120];
+   for(aux=0; aux<3; aux=aux+1){
+      FORWARD [$1];
+      TURN [120];
+   }
+}
+estrellaDavid(200);
+
+//Pentragrama
+func pentagrama () {
+   COLOR [255,0,0];
+   TURN [70];
+   FORWARD [$1];
+   x = 0;
+   while (x < 3){
+      TURN [145];
+      FORWARD [$1];
+      x=x+1;
+   }
+   TURN [142];
+   FORWARD [$1];
+}
+pentagrama(200);
+
+//Espiral 1
+proc cuadrado(){
+   PenUP[];
+   FORWARD[$1];
+   TURN[90];
+   PenDOWN[];
+   FORWARD[$1];
+   TURN[90];
+   FORWARD[$1];
+   TURN[90];
+   PenUP[];
+   FORWARD[$1];
+   TURN[90];
+   PenDOWN[];
+   TURN[90];
+}
+
+proc Espi(){
+   for(j=0;j<24;j=j+1){
+      TURN[15];
+      cuadrado($1);
+   }
+}
+
+Espi(100);
+
+//Espiral 2
+
+func circulo(){
+   for(i=0; i<366; i=i+1){
+      FORWARD[2];
+      TURN[1];
+   }
+}
+
+func espirografo(){
+   for(j=0; j<45; j=j+1){
+      COLOR[j*30,j*40,j*20];
+      circulo();
+      TURN[90];
+   }
+}
+
+
+espirografo();
+
+//Espiral cuadrada
+proc recur(){
+   if($1<2){
+      FORWARD[$1*10];
+   }else{
+      FORWARD[$1*10];
+      TURN[90];
+      recur($1-1);
+   }
+}
+PenUP[];
+FORWARD[-350];
+TURN[270];
+FORWARD[320];
+PenDOWN[];
+COLOR[251,152,55];
+TURN[90];
+recur(65);
+
+//Curva de Hilbert de nivel n
+proc der(){
+ if($1>0){
+   TURN[-90];
+   izq($1-1,$2);
+   FORWARD[$2]; 
+   TURN[90];
+   der($1-1,$2);
+   FORWARD[$2]; 
+   der($1-1,$2);
+   TURN[90];
+   FORWARD[$2]; 
+   izq($1-1,$2);
+   TURN[-90];
+ }
+}
+
+proc izq(){
+ if($1>0){
+   TURN[90];
+   der($1-1,$2);
+   FORWARD[$2]; 
+   TURN[-90];
+   izq($1-1,$2);
+   FORWARD[$2]; 
+   izq($1-1,$2);
+   TURN[-90];
+   FORWARD[$2]; 
+   der($1-1,$2);
+   TURN[90];
+ }
+}
+PenUP[];
+FORWARD[-350];
+TURN[270];
+FORWARD[320];
+PenDOWN[];
+TURN[90];
+izq(7,5);
+
+//Curva de Koch ( Copo de nieve ) de nivel n
+proc koch(){
+ if($1==0){
+   FORWARD[$2];
+ }else{
+   koch($1-1,$2/3);
+   TURN[60];
+   koch($1-1,$2/3);
+   TURN[-120];
+   koch($1-1,$2/3);
+   TURN[60];
+   koch($1-1,$2/3);
+ }
+}
+
+proc copo(){
+ for(i=0;i<3;i=i+1){
+   koch($1,$2);
+   TURN[-120];
+ }
+}
+
+PenUP[];
+FORWARD[-250];
+TURN[270];
+FORWARD[-161];
+PenDOWN[];
+COLOR[255,255,255];
+TURN[90];
+copo(7,560);
+
+//Arbol de n niveles
+proc arbol(){
+ if($1>5){
+  FORWARD[$1];
+  TURN[20];
+  arbol($1-5);
+  TURN[320];
+  arbol($1-5);
+  TURN[20];
+  FORWARD[(-1)*($1)];
+ }
+}
+
+PenUP[];
+TURN[90];
+TURN[180];
+FORWARD[200];
+TURN[180];
+PenDOWN[];
+COLOR[255,255,255];
+arbol(60);
+
+//Regla de nivel n
+proc seccion(){
+ if($1>0){
+  TURN[90];
+  FORWARD[100];
+  TURN[180];
+  FORWARD[100];
+  TURN[90];
+  FORWARD[50];
+  TURN[90];
+  FORWARD[50];
+  TURN[180];
+  FORWARD[50];
+  TURN[90];
+  FORWARD[50];
+  seccion($1-1);
+ }else{
+  TURN[90];
+  FORWARD[100];
+ }   
+}
+PenUP[];
+TURN[180];
+FORWARD[350];
+TURN[180];
+PenDOWN[];
+COLOR[50,250,50];
+seccion(7);
+

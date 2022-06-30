@@ -1,0 +1,74 @@
+//INSTRUCCIONES BÁSICAS
+Avanzar[100];
+Girar[90];
+CambiarColor[255,0,0];
+Avanzar[100];
+Girar[90];
+CambiarColor[0,255,0];
+Avanzar[100];
+Girar[90];
+CambiarColor[0,0,255];
+Avanzar[100];
+Girar[90];
+
+
+//CICLOS-ESTRELLA DE COLORES
+for(i=0;i<130;i=i+1){
+   CambiarColor[i*13, i*26, i*51];
+   Avanzar[i*5];
+   Girar[150];
+}
+
+//CICLOS-ESPIRAL
+for(i=0;i<200;i=i+1){
+   CambiarColor[0, i*26, i*51];
+   Avanzar[i*4];
+   Girar[145];
+}
+
+//PROCEDIMIENTOS
+proc cuadro(){
+   for(Auxiliar=0;Auxiliar<4;Auxiliar=Auxiliar+1){
+      Avanzar[100];
+      Girar[90];
+   }
+}
+for(i=0; i< 360; i=i+1){
+cuadro();
+Girar[1];
+}
+
+//PRUEBA CON FUNCIONES
+func potencia () {
+    retorno = 1;
+    for(aux=0; aux<$2; aux=aux+1){
+        retorno = retorno*$1;
+    }
+    return retorno;
+}
+for(i=0; i<24; i=i+1){
+    Avanzar[potencia(i,2)];
+    CambiarColor[
+      5*potencia(i,1),
+      5*potencia(i,2),
+      5*potencia(i,3)
+   ];
+    Girar[90];
+}
+
+PROCEDIMIENTOS ANIDADOS
+proc circulo(){
+   for(aux=0; aux<360; aux=aux+1){
+      CambiarColor[$1,$2,$3];
+      Avanzar[2];
+      Girar[1];
+   }
+}
+proc flor(){
+   for(i=0;i<8;i=i+1){
+      circulo((i+1)*30, (i+1)*32, (i+1)*60);
+      Girar[45];
+   }
+}
+flor();
+

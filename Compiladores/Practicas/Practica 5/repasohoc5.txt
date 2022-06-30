@@ -1,0 +1,99 @@
+Repasar el codigo de hoc5
+    Bases para entender hoc5 se deben entender los conceptos
+       de flujo de control (ejec. secuencial y saltos)
+       de decisiones (como se usan para hacer programas)
+       de ciclos (como se usan para hacer programas)
+       Interprete
+       Maquina Virtual (en particular Maquina Virtual de pila)
+    de Compiladores
+       GLC
+       Esquema de traduccion
+    de lenguaje C
+       macros, macros con parametros
+       coercion (casting)
+       arreglos, apuntadores, relacion entre arreglos y apuntadores,
+       valor que proporciona el nombre de un arreglo
+       aritmetica de apuntadores
+       apuntador a apuntador
+       apuntadores a funcion, arreglos de apuntadores a funcion
+       valor que proporciona el nombre de una funcion
+       estructuras y uniones, arreglos de estructuras y uniones
+       asignacion dinamica de memoria
+       recursividad en el codigo y los datos
+    Estructura de Datos   
+       Pila (LIFO)
+       evaluacion de expresiones en postfijo usando una pila
+       listas simplemente enlazadas
+       busqueda e insercion en listas simplemente enlazadas
+    de YACC
+       accion gramatical
+       $$, $n (en particular $1,$2,$3,$4,$5,$6,$7, etc.)
+    de HOC 4
+       funciones code y execute
+    Hoc 5 (implementa las decisiones y ciclos en la maquina virtual de pila)
+        -en la gramatica ver la parte de stmt las producciones del if, if-else,
+        while. Importante
+        -vea que a los STOPs se les dan 2 usos
+        a) para apartar espacio (ver mapas de memoria)
+        b) y para detener la ejecucion (OBVIO) de una secuencia de
+        instrucciones es como si el STOP fuese una barrera que impide
+        que la ejecucion siga mas alla del STOP (impide que ejecucion siga
+        de largo ). Por ejemplo el cuerpo del while solo debe ejecutarse si
+        la condicion se cumple si no se pone un STOP despues de las
+        intrucciones de la condicion el cuerpo del while se ejecutaria aunque
+        la condicion no se cumpla y si no se pone un STOP despues de las
+        intrucciones del cuerpo las instrucciones despues del cuerpo se 
+        ejecutarian aunque la condicion del while no sea falsa.
+        -en la gramatica ver la parte de expr para los operadores de
+        comparacion (GT, GE, LT, LE, EQ y NE)
+        -repase los mapas de memoria de whilecode y ifcode
+        en code.c estudiar el codigo de las funciones whilecode, ifcode
+        viendo al mismo tiempo los mapas de memoria del if y del while
+        analice como se usa la funcion execute y la variable pc para
+        ejecutar los ifs y los whiles.
+
+
+Codigo Generado
+           RAM
+
+ $1->      whilecode
+ ($1)[1]-> STOPX apu 1er inst stmt
+ ($1)[2]-> STOPX apu a inst desp ult STOP
+           expr
+           STOP
+           stmt
+           STOP
+progp->    ____
+
+Ejecucion codigo
+
+           RAM
+
+           whilecode
+     pc->  apu 1er inst stmt
+savepc+1   apu a inst desp ult STOP
+savepc+2   expr
+           STOP
+           stmt
+           STOP
+
+Inicio
+	pc = 1er inst de la condicion  (savepc+2)
+Esto se repite hasta que la condicion es falsa
+	pc = 1er inst del cuerpo  (*savepc)
+	pc = 1er inst de la condicion
+Final
+        pc = inst desp ultimo STOP ( contenido de savepc+1)
+
+        Observe que los saltos que da pc son parte del flujo de control
+   
+        -Note que la funcion whilecode usa el while de C (la podria modificar
+        ud,para usar goto[aunque no es muy buena idea], y la funcion ifcode
+        usa el if de C.
+        -vea que sin los STOPS colocados donde los pone hoc5 las llamadas a la 
+         funcion execute no retornarian cuando deben retornar
+        -vea que no habria condiciones no triviales en las decisiones y ciclos
+        sin los operadores de comparacion (gt, lt, eq, etc.), logicos (and , or 
+        y not) 
+
+
