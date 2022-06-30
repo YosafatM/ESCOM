@@ -1,0 +1,545 @@
+classdef proyecto < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        ProyectoSealesUIFigure          matlab.ui.Figure
+        SuperponerACheckBox             matlab.ui.control.CheckBox
+        GuardarenLabel                  matlab.ui.control.Label
+        ButtonGroup                     matlab.ui.container.ButtonGroup
+        BButton                         matlab.ui.control.RadioButton
+        AButton                         matlab.ui.control.RadioButton
+        GrabaraudioButton               matlab.ui.control.Button
+        ReproducirBButton               matlab.ui.control.Button
+        ReproducirAButton               matlab.ui.control.Button
+        ReproducirSalidaButton          matlab.ui.control.Button
+        ConfiguracindelaOperacinPanel   matlab.ui.container.Panel
+        DesplazaralaizquierdaCheckBox   matlab.ui.control.CheckBox
+        SealPrincipalSwitch             matlab.ui.control.Switch
+        SealPrincipalSwitchLabel        matlab.ui.control.Label
+        TipodeinterpoladoDropDown       matlab.ui.control.DropDown
+        TipodeinterpoladoDropDownLabel  matlab.ui.control.Label
+        FactordeOperacionSlider         matlab.ui.control.Slider
+        FactordeOperacinSliderLabel     matlab.ui.control.Label
+        OperacionKnob                   matlab.ui.control.DiscreteKnob
+        OperacinKnobLabel               matlab.ui.control.Label
+        EntradasAxes                    matlab.ui.control.UIAxes
+        SalidaAxes                      matlab.ui.control.UIAxes
+    end
+
+    
+    properties (Access = private)
+        Operacion Operaciones = Operaciones.Convolucion
+        Interpolado Interpolacion = Interpolacion.Cero
+        RecorderA audiorecorder = audiorecorder
+        RecorderB audiorecorder = audiorecorder
+        GrabarA (1, 1) logical = 1
+        SuperponerA (1,1) logical = 0
+        OperarA (1, 1) logical = 1
+        SignalA = zeros(1, 8000*3)
+        SignalB = zeros(1, 8000*3)
+        Salida = zeros(1, 8000*3)
+        kAxisX = (0:8000*3-1)
+        time = (0:8000*3-1)
+        Factor = 5
+        DesplazarDerecha (1, 1) logical = 1
+    end
+    
+    methods (Access = private)
+        
+        function graficarEntradas(app)
+            hold(app.EntradasAxes, "off");
+            grid(app.EntradasAxes,'on');
+            app.time = app.kAxisX; %La entrada es del mismo tamaño
+            
+            if app.SuperponerA
+                plot(app.EntradasAxes, app.time, app.SignalB,...
+                    'Color', '#66d9be');
+                hold(app.EntradasAxes, "on");
+                plot(app.EntradasAxes, app.time, app.SignalA,...
+                    'Color', '#7d568c');
+            else
+                plot(app.EntradasAxes, app.time, app.SignalA,...
+                    'Color', '#7d568c');
+                hold(app.EntradasAxes, "on");
+                plot(app.EntradasAxes, app.time, app.SignalB,...
+                    'Color', '#66d9be');
+            end
+        end
+        
+        function graficarSalida(app)
+            grid(app.SalidaAxes,'on');
+            plot(app.SalidaAxes, app.time, app.Salida,...
+                    'Color', '#ff5ebf');
+        end
+        
+        function llamarOperacion(app)
+            switch app.Operacion
+                case Operaciones.Desplazar
+                    app.desplazar();
+                case Operaciones.Reflejar
+                    app.reflejar();
+                case Operaciones.Atenuar
+                    app.atenuar();
+                case Operaciones.Sumar
+                    app.sumar();
+                case Operaciones.Convolucion
+                    app.convolucion();
+                case Operaciones.Restar
+                    app.restar();
+                case Operaciones.Diezmar
+                    app.diezmar();
+                case Operaciones.Interpolar
+                    app.interpolar();
+                otherwise
+                    app.amplificar();
+            end
+            
+            app.graficarSalida();
+        end
+        
+        function interpolar(app)
+            if app.OperarA
+                signal = app.SignalA;
+            else
+                signal = app.SignalB;
+            end
+            
+            rango = 0:length(signal) * app.Factor -1;
+            
+            if app.Factor == 0
+                app.time = app.kAxisX;
+                app.Salida = zeros(length(app.time), 1);
+                return;
+            end
+            
+            switch app.Interpolado
+                case Interpolacion.Cero
+                    app.Salida = zeros(length(signal)*app.Factor, 1);
+                    app.Salida(1:app.Factor:end) = signal;
+                case Interpolacion.Escalon
+                    app.Salida = interp1(app.kAxisX * app.Factor,...
+                        signal, rango, 'previous');
+                otherwise
+                    app.Salida = interp1(app.kAxisX * app.Factor,...
+                        signal, rango, 'linear');
+            end
+            
+            disp(app.Salida);
+            app.Salida(isnan(app.Salida)) = 0;
+            app.time = rango;
+        end
+        
+        function diezmar(app)
+            app.time = app.kAxisX;
+            
+            if app.OperarA
+                app.Salida = decimate(app.SignalA', fix(app.Factor));
+            else
+                app.Salida = decimate(app.SignalB', fix(app.Factor));
+            end
+            
+            app.time = decimate(app.time', fix(app.Factor));
+        end
+        
+        function desplazar(app)
+            app.time = app.kAxisX;
+            %Las entradas son del mismo tamaño
+            porcentaje = app.Factor/100;
+            desplazamiento = fix(porcentaje * length(app.SignalA));
+            
+            if app.OperarA
+                signal = app.SignalA;
+            else
+                signal = app.SignalB;
+            end
+            
+            if desplazamiento == 0
+                app.Salida = signal;
+                return;
+            end
+            
+            if app.DesplazarDerecha
+                app.Salida = [zeros(desplazamiento, 1);...
+                    signal(1:end-desplazamiento)];
+            else
+                app.Salida = [signal(1+desplazamiento:end);...
+                    zeros(desplazamiento, 1)];
+            end
+        end
+        
+        function atenuar(app)
+            app.time = app.kAxisX;
+            
+            if app.OperarA
+                app.Salida = app.SignalA / app.Factor;
+            else
+                app.Salida = app.SignalB / app.Factor;
+            end
+        end
+        
+        function amplificar(app)
+            app.time = app.kAxisX;
+            
+            if app.OperarA
+                app.Salida = app.SignalA * app.Factor;
+            else
+                app.Salida = app.SignalB * app.Factor;
+            end
+        end
+        
+        function sumar(app)
+            app.time = app.kAxisX;
+            app.Salida = app.SignalA + app.SignalB;
+        end
+        
+        function restar(app)
+            app.time = app.kAxisX;
+            
+            if app.OperarA
+                app.Salida = app.SignalA - app.SignalB;
+            else
+                app.Salida = app.SignalB - app.SignalA;
+            end
+        end
+        
+        function reflejar(app)
+            app.time = app.kAxisX;
+            
+            if app.OperarA
+                app.Salida = flip(app.SignalA);
+            else
+                app.Salida = flip(app.SignalB);
+            end
+        end
+        
+        function convolucion(app)
+            app.Salida = conv(app.SignalA, app.SignalB);
+            app.time = 0:length(app.Salida)-1;
+            app.time = app.time;
+        end
+    end
+    
+
+    % Callbacks that handle component events
+    methods (Access = private)
+
+        % Button pushed function: GrabaraudioButton
+        function GrabaraudioButtonPushed(app, event)
+            window = msgbox('Grabando audio');
+            
+            if app.GrabarA
+                recordblocking(app.RecorderA, 3);
+                app.SignalA = getaudiodata(app.RecorderA);
+            else
+                recordblocking(app.RecorderB, 3);
+                app.SignalB = getaudiodata(app.RecorderB);
+            end
+            
+            close(window);
+            app.graficarEntradas();
+            app.llamarOperacion();
+        end
+
+        % Selection changed function: ButtonGroup
+        function ButtonGroupSelectionChanged(app, event)
+            selectedButton = app.ButtonGroup.SelectedObject;
+            
+            switch get(selectedButton, 'tag')
+                case 'A'
+                    app.GrabarA = true;
+                otherwise
+                    app.GrabarA = false;
+            end
+        end
+
+        % Value changed function: SuperponerACheckBox
+        function SuperponerACheckBoxValueChanged(app, event)
+            isChecked = app.SuperponerACheckBox.Value;
+            app.SuperponerA = logical(isChecked);
+            app.graficarEntradas();
+        end
+
+        % Button pushed function: ReproducirAButton
+        function ReproducirAButtonPushed(app, event)
+            sound(app.SignalA);
+        end
+
+        % Button pushed function: ReproducirBButton
+        function ReproducirBButtonPushed(app, event)
+            sound(app.SignalB);
+        end
+
+        % Value changed function: OperacionKnob
+        function OperacionKnobValueChanged(app, event)
+            value = app.OperacionKnob.Value;
+            
+            switch value
+                case 'Desplazar %'
+                    app.Operacion = Operaciones.Desplazar;
+                case 'Reflejar'
+                    app.Operacion = Operaciones.Reflejar;
+                case 'Atenuar'
+                    app.Operacion = Operaciones.Atenuar;
+                case 'Sumar'
+                    app.Operacion = Operaciones.Sumar;
+                case 'Convolución'
+                    app.Operacion = Operaciones.Convolucion;
+                case 'Restar'
+                    app.Operacion = Operaciones.Restar;
+                case 'Diezmar'
+                    app.Operacion = Operaciones.Diezmar;
+                case 'Interpolar'
+                    app.Operacion = Operaciones.Interpolar;
+                otherwise
+                    app.Operacion = Operaciones.Amplificar;
+            end
+            
+            app.llamarOperacion();
+        end
+
+        % Value changed function: FactordeOperacionSlider
+        function FactordeOperacionSliderValueChanging(app, event)
+            changingValue = event.Value;
+            app.Factor = fix(changingValue);
+            
+            if app.Operacion == Operaciones.Desplazar ||...
+                    app.Operacion == Operaciones.Atenuar ||...
+                    app.Operacion == Operaciones.Amplificar ||...
+                    app.Operacion == Operaciones.Diezmar ||...
+                    app.Operacion == Operaciones.Interpolar
+                app.llamarOperacion();
+            end
+        end
+
+        % Value changed function: SealPrincipalSwitch
+        function SealPrincipalSwitchValueChanged(app, event)
+            value = app.SealPrincipalSwitch.Value;
+            app.OperarA = value == 'A';
+            app.llamarOperacion();
+        end
+
+        % Value changed function: TipodeinterpoladoDropDown
+        function TipodeinterpoladoDropDownValueChanged(app, event)
+            value = app.TipodeinterpoladoDropDown.Value;
+            
+            switch value
+                case 'Cero'
+                    app.Interpolado = Interpolacion.Cero;
+                case 'Escalon'
+                    app.Interpolado = Interpolacion.Escalon;
+                otherwise
+                    app.Interpolado = Interpolacion.Lineal;
+            end
+            
+            if app.Operacion == Operaciones.Interpolar
+                app.llamarOperacion();
+            end
+        end
+
+        % Button pushed function: ReproducirSalidaButton
+        function ReproducirSalidaButtonPushed(app, event)
+            sound(app.Salida);
+        end
+
+        % Value changed function: DesplazaralaizquierdaCheckBox
+        function DesplazaralaizquierdaCheckBoxValueChanged(app, event)
+            isChecked = app.DesplazaralaizquierdaCheckBox.Value;
+            app.DesplazarDerecha = ~logical(isChecked);
+            app.llamarOperacion();
+        end
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create ProyectoSealesUIFigure and hide until all components are created
+            app.ProyectoSealesUIFigure = uifigure('Visible', 'off');
+            app.ProyectoSealesUIFigure.Position = [100 100 640 480];
+            app.ProyectoSealesUIFigure.Name = 'Proyecto Señales';
+
+            % Create SalidaAxes
+            app.SalidaAxes = uiaxes(app.ProyectoSealesUIFigure);
+            title(app.SalidaAxes, 'Salida')
+            xlabel(app.SalidaAxes, 'n')
+            ylabel(app.SalidaAxes, 'Intensidad')
+            app.SalidaAxes.Position = [319 42 300 185];
+
+            % Create EntradasAxes
+            app.EntradasAxes = uiaxes(app.ProyectoSealesUIFigure);
+            title(app.EntradasAxes, 'Entradas')
+            xlabel(app.EntradasAxes, 'n')
+            ylabel(app.EntradasAxes, 'Intensidad')
+            app.EntradasAxes.Position = [319 248 300 185];
+
+            % Create ConfiguracindelaOperacinPanel
+            app.ConfiguracindelaOperacinPanel = uipanel(app.ProyectoSealesUIFigure);
+            app.ConfiguracindelaOperacinPanel.TitlePosition = 'centertop';
+            app.ConfiguracindelaOperacinPanel.Title = 'Configuración de la Operación';
+            app.ConfiguracindelaOperacinPanel.FontAngle = 'italic';
+            app.ConfiguracindelaOperacinPanel.FontWeight = 'bold';
+            app.ConfiguracindelaOperacinPanel.Position = [18 29 289 395];
+
+            % Create OperacinKnobLabel
+            app.OperacinKnobLabel = uilabel(app.ConfiguracindelaOperacinPanel);
+            app.OperacinKnobLabel.HorizontalAlignment = 'center';
+            app.OperacinKnobLabel.FontWeight = 'bold';
+            app.OperacinKnobLabel.Position = [106 14 65 22];
+            app.OperacinKnobLabel.Text = 'Operación';
+
+            % Create OperacionKnob
+            app.OperacionKnob = uiknob(app.ConfiguracindelaOperacinPanel, 'discrete');
+            app.OperacionKnob.Items = {'Desplazar %', 'Reflejar', 'Atenuar', 'Sumar', 'Convolución', 'Restar', 'Diezmar', 'Interpolar', 'Amplificar'};
+            app.OperacionKnob.ValueChangedFcn = createCallbackFcn(app, @OperacionKnobValueChanged, true);
+            app.OperacionKnob.FontWeight = 'bold';
+            app.OperacionKnob.Position = [94 51 89 89];
+            app.OperacionKnob.Value = 'Convolución';
+
+            % Create FactordeOperacinSliderLabel
+            app.FactordeOperacinSliderLabel = uilabel(app.ConfiguracindelaOperacinPanel);
+            app.FactordeOperacinSliderLabel.HorizontalAlignment = 'center';
+            app.FactordeOperacinSliderLabel.FontWeight = 'bold';
+            app.FactordeOperacinSliderLabel.Position = [82 267 122 32];
+            app.FactordeOperacinSliderLabel.Text = 'Factor de Operación';
+
+            % Create FactordeOperacionSlider
+            app.FactordeOperacionSlider = uislider(app.ConfiguracindelaOperacinPanel);
+            app.FactordeOperacionSlider.Limits = [0 50];
+            app.FactordeOperacionSlider.ValueChangedFcn = createCallbackFcn(app, @FactordeOperacionSliderValueChanging, true);
+            app.FactordeOperacionSlider.Position = [15 257 256 3];
+            app.FactordeOperacionSlider.Value = 5;
+
+            % Create TipodeinterpoladoDropDownLabel
+            app.TipodeinterpoladoDropDownLabel = uilabel(app.ConfiguracindelaOperacinPanel);
+            app.TipodeinterpoladoDropDownLabel.HorizontalAlignment = 'center';
+            app.TipodeinterpoladoDropDownLabel.FontWeight = 'bold';
+            app.TipodeinterpoladoDropDownLabel.Position = [159 342 117 22];
+            app.TipodeinterpoladoDropDownLabel.Text = 'Tipo de interpolado';
+
+            % Create TipodeinterpoladoDropDown
+            app.TipodeinterpoladoDropDown = uidropdown(app.ConfiguracindelaOperacinPanel);
+            app.TipodeinterpoladoDropDown.Items = {'Cero', 'Escalón', 'Lineal'};
+            app.TipodeinterpoladoDropDown.ItemsData = {'Cero', 'Escalon', 'Lineal'};
+            app.TipodeinterpoladoDropDown.ValueChangedFcn = createCallbackFcn(app, @TipodeinterpoladoDropDownValueChanged, true);
+            app.TipodeinterpoladoDropDown.FontWeight = 'bold';
+            app.TipodeinterpoladoDropDown.Position = [167 315 100 22];
+            app.TipodeinterpoladoDropDown.Value = 'Cero';
+
+            % Create SealPrincipalSwitchLabel
+            app.SealPrincipalSwitchLabel = uilabel(app.ConfiguracindelaOperacinPanel);
+            app.SealPrincipalSwitchLabel.HorizontalAlignment = 'center';
+            app.SealPrincipalSwitchLabel.FontWeight = 'bold';
+            app.SealPrincipalSwitchLabel.Position = [17 342 92 22];
+            app.SealPrincipalSwitchLabel.Text = 'Señal Principal';
+
+            % Create SealPrincipalSwitch
+            app.SealPrincipalSwitch = uiswitch(app.ConfiguracindelaOperacinPanel, 'slider');
+            app.SealPrincipalSwitch.Items = {'A', 'B'};
+            app.SealPrincipalSwitch.ValueChangedFcn = createCallbackFcn(app, @SealPrincipalSwitchValueChanged, true);
+            app.SealPrincipalSwitch.FontWeight = 'bold';
+            app.SealPrincipalSwitch.Position = [39 314 45 20];
+            app.SealPrincipalSwitch.Value = 'A';
+
+            % Create DesplazaralaizquierdaCheckBox
+            app.DesplazaralaizquierdaCheckBox = uicheckbox(app.ConfiguracindelaOperacinPanel);
+            app.DesplazaralaizquierdaCheckBox.ValueChangedFcn = createCallbackFcn(app, @DesplazaralaizquierdaCheckBoxValueChanged, true);
+            app.DesplazaralaizquierdaCheckBox.Text = 'Desplazar a la izquierda';
+            app.DesplazaralaizquierdaCheckBox.Position = [63 186 151 22];
+
+            % Create ReproducirSalidaButton
+            app.ReproducirSalidaButton = uibutton(app.ProyectoSealesUIFigure, 'push');
+            app.ReproducirSalidaButton.ButtonPushedFcn = createCallbackFcn(app, @ReproducirSalidaButtonPushed, true);
+            app.ReproducirSalidaButton.Position = [432 11 111 22];
+            app.ReproducirSalidaButton.Text = 'Reproducir Salida';
+
+            % Create ReproducirAButton
+            app.ReproducirAButton = uibutton(app.ProyectoSealesUIFigure, 'push');
+            app.ReproducirAButton.ButtonPushedFcn = createCallbackFcn(app, @ReproducirAButtonPushed, true);
+            app.ReproducirAButton.Position = [370 445 100 22];
+            app.ReproducirAButton.Text = 'Reproducir A';
+
+            % Create ReproducirBButton
+            app.ReproducirBButton = uibutton(app.ProyectoSealesUIFigure, 'push');
+            app.ReproducirBButton.ButtonPushedFcn = createCallbackFcn(app, @ReproducirBButtonPushed, true);
+            app.ReproducirBButton.Position = [496 445 100 22];
+            app.ReproducirBButton.Text = 'Reproducir B';
+
+            % Create GrabaraudioButton
+            app.GrabaraudioButton = uibutton(app.ProyectoSealesUIFigure, 'push');
+            app.GrabaraudioButton.ButtonPushedFcn = createCallbackFcn(app, @GrabaraudioButtonPushed, true);
+            app.GrabaraudioButton.Position = [22 445 100 22];
+            app.GrabaraudioButton.Text = 'Grabar audio';
+
+            % Create ButtonGroup
+            app.ButtonGroup = uibuttongroup(app.ProyectoSealesUIFigure);
+            app.ButtonGroup.SelectionChangedFcn = createCallbackFcn(app, @ButtonGroupSelectionChanged, true);
+            app.ButtonGroup.Position = [203 439 100 35];
+
+            % Create AButton
+            app.AButton = uiradiobutton(app.ButtonGroup);
+            app.AButton.Tag = 'A';
+            app.AButton.Text = 'A';
+            app.AButton.Position = [12 6 27 22];
+            app.AButton.Value = true;
+
+            % Create BButton
+            app.BButton = uiradiobutton(app.ButtonGroup);
+            app.BButton.Tag = 'B';
+            app.BButton.Text = 'B';
+            app.BButton.Position = [57 6 35 22];
+
+            % Create GuardarenLabel
+            app.GuardarenLabel = uilabel(app.ProyectoSealesUIFigure);
+            app.GuardarenLabel.Position = [130 445 70 22];
+            app.GuardarenLabel.Text = 'Guardar en:';
+
+            % Create SuperponerACheckBox
+            app.SuperponerACheckBox = uicheckbox(app.ProyectoSealesUIFigure);
+            app.SuperponerACheckBox.ValueChangedFcn = createCallbackFcn(app, @SuperponerACheckBoxValueChanged, true);
+            app.SuperponerACheckBox.Text = 'Superponer A';
+            app.SuperponerACheckBox.Position = [524 230 95 22];
+
+            % Show the figure after all components are created
+            app.ProyectoSealesUIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = proyecto
+
+            runningApp = getRunningApp(app);
+
+            % Check for running singleton app
+            if isempty(runningApp)
+
+                % Create UIFigure and components
+                createComponents(app)
+
+                % Register the app with App Designer
+                registerApp(app, app.ProyectoSealesUIFigure)
+            else
+
+                % Focus the running singleton app
+                figure(runningApp.ProyectoSealesUIFigure)
+
+                app = runningApp;
+            end
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.ProyectoSealesUIFigure)
+        end
+    end
+end
