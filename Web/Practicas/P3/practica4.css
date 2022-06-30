@@ -1,0 +1,65 @@
+body {
+	background: url("fondo.jpg");
+}
+
+.tituloPrincipal {
+	text-align: center;
+}
+
+#textoPrueba {
+	color: #808080;
+	
+}
+
+.tituloPrincipal, #textoPrueba, #contenido, .topico {
+	background-color: #FFFFFF;
+}
+
+.topico#titulo2 {
+	color: gold;
+	text-align: right;
+}
+
+#tabla td {
+	color: cyan;
+}
+
+body>h3 {
+	background: tomato;
+}
+
+#prueba1+h3 {
+	text-align: center;
+}
+
+* {
+	padding: 5px;
+}
+
+table[border="1"] {
+	margin:15px;
+}
+
+td[id^="emp"] {
+	padding:15px;
+}
+
+input[type$="ton"] {
+	color: gold;
+}
+
+h6[id*="mbr"] {
+	color:red;
+}
+
+h5[id|="google"] {
+	color: hotpink;
+}
+
+button[class="clasesita"][id="idesita"] {
+	color: tomato;
+}
+
+a:visited {
+	color: black;
+}

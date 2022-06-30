@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE RELACION_DE_COLUMNAS SYSTEM "cuestionario.dtd">
+<RELACION_DE_COLUMNAS PLANTILLA="prototipo_RC.swf">
+	<PREGUNTA TEXTO="Relacione los presidentes mostrados abajo con su respectiva nacion" RESPUESTA="OP1-3;OP2-4;0P3-1;0P4-2">
+		<DRAGS>
+			<OPCION IMAGEN="presidente2.jpg">Fidel Castro</OPCION>
+			<OPCION IMAGEN="presidente4.jpg">George W. Bush</OPCION>
+			<OPCION IMAGEN="presidente3.jpg">Vicente Fox</OPCION>
+			<OPCION IMAGEN="presidente1.jpg">Ricardo Lagos</OPCION>
+		</DRAGS>
+		<TARGETS>
+			<OPCION IMAGEN="nacion3.jpg">Mexico</OPCION>
+			<OPCION IMAGEN="nacion1.jpg">Chile</OPCION>
+			<OPCION IMAGEN="nacion2.jpg">Cuba</OPCION>
+			<OPCION IMAGEN="nacion4.jpg">Estados Unidos</OPCION>
+		</TARGETS>
+	</PREGUNTA>
+</RELACION_DE_COLUMNAS>

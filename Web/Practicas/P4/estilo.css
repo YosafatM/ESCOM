@@ -1,0 +1,17 @@
+header {
+	padding: 10px 20px 30px 40px;
+	margin: 10px 20px 30px 40px;
+	border: solid blue;
+}
+
+section {
+	padding: 40px 30px 20px 10px;
+	margin: 40px 30px 20px 10px;
+	border: solid green;
+}
+
+footer {
+	padding: 10px 20px 30px 40px;
+	margin: 10px 20px 30px 40px;
+	border: solid red;
+}

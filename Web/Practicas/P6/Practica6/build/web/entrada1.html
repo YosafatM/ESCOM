@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <script>
+            function controlador() {
+                //Obtenemos el valor del input, siempre es numero
+                var numInputs = document.getElementById("numParams").value;
+                
+                //Obtenemos el form
+                var form = document.getElementById("formulario");
+                
+                //Si ya tenía hijos, se los quitamos
+                while (form.hasChildNodes()) {
+                    form.removeChild(form.lastChild);
+                }
+                
+                //Agregamos los hijos (inputs y texto, en este caso)
+                for (var i = 0; i < numInputs; i++){
+                    //Se debe agregar el texto
+                    form.appendChild(document.createTextNode("Parametro " + i + " "));
+                    
+                    //Se debe agregar el input
+                    var input = document.createElement("input");
+                        input.type = "text";
+                        input.name = "parametro_" + i;
+                        input.required = true;
+                    form.appendChild(input);
+                    
+                    //Saltamos de linea
+                    form.appendChild(document.createElement("br"));
+                }
+                
+                //Creamos el boton de submit
+                form.appendChild(document.createElement("br"));
+                var input = document.createElement("input");
+                    input.type = "submit";
+                    input.value = "Enviar";
+                form.appendChild(input);
+            }
+        </script>
+        
+        <title>Entrada</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+    <center>
+        Numero de parametros: &nbsp; <input type="number" id="numParams" onkeyup="controlador()"/>
+    
+        <br/><br/>
+    
+        <form id="formulario" action="Servlet1" method="GET"></form>
+    </center>
+    </body>
+</html>
