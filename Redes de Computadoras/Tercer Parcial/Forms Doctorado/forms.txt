@@ -1,0 +1,5 @@
+17:28 Redes de Computadoras
+17:34 Fundamentos de Diseño Digital
+17:38 Algoritmia y Programación Estructurada
+17:42 Electrónica Analógica
+17:45 Bases de Datos

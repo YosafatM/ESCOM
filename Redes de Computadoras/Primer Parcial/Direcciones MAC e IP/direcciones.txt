@@ -1,0 +1,13 @@
+Direccion MAC: AC-E2-D3-76-30-9E
+Direccion IPv4: 192.168.1.75
+Mascara de subred: 255.255.255.0
+
+Fabricantes MAC:
+AC-E2-D3   HP
+E4-B3-18   Intel
+00-25-4B   Apple
+
+D4-6A-6A   Hon Hai Precision Ind. Co.,Ltd.
+
+//Lunes
+192.168.1.75
